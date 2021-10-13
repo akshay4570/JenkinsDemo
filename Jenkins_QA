@@ -22,7 +22,7 @@ node {
     def toolbelt = tool 'toolbelt'
    
     stage('checkout source') {
-	// when running in multi-branch job, run this command
+	// when running in multi-branch job
 	    checkout scm
     }
 
