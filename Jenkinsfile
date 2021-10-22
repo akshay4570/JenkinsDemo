@@ -12,6 +12,7 @@ node {
     def JWT_KEY_CRED_ID = env.JWT_CRED_ID_DH
     def CONNECTED_APP_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY_DH
     def TEST_LEVEL = 'RunLocalTests'
+    def FORCE_APP = 'force-app'
 
     println 'KEY IS' 
     println JWT_KEY_CRED_ID
@@ -36,6 +37,9 @@ node {
             if (rc != 0) { error 'Salesforce Dev hub org authorization failed' }
         }
 
+        stage('Static Code Analysis'){
+            rc = command "${toolbelt} ${scanner}:run --target ${FORCE_APP}"
+        }
         stage('Run Tests on Data'){
             rc = command "${toolbelt} force:apex:test:run --targetusername ${HUB_ORG} --wait 10 --resultformat tap --codecoverage --testlevel ${TEST_LEVEL}"
         }
