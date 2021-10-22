@@ -21,6 +21,7 @@ node {
     println CONNECTED_APP_CONSUMER_KEY
     
     def toolbelt = tool 'toolbelt'
+    def scanner = tool 'scanner'
    
     stage('checkout source') {
 	// when running in multi-branch job temp
