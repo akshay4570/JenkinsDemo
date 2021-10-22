@@ -13,6 +13,8 @@ node {
     def CONNECTED_APP_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY_DH
     def TEST_LEVEL = 'RunLocalTests'
     def FORCE_APP = 'force-app'
+    def PATH = 'C:\\results.csv'
+    def FORMAT = 'csv'
 
     println 'KEY IS' 
     println JWT_KEY_CRED_ID
@@ -39,7 +41,7 @@ node {
         }
 
         stage('Static Code Analysis'){
-            rc = command "${toolbelt} ${scanner}:run --target ${FORCE_APP}"
+            rc = command "${toolbelt} ${scanner}:run --target ${FORCE_APP} --outputfile ${PATH} --format ${FORMAT}"
         }
         stage('Run Tests on Data'){
             rc = command "${toolbelt} force:apex:test:run --targetusername ${HUB_ORG} --wait 10 --resultformat tap --codecoverage --testlevel ${TEST_LEVEL}"
