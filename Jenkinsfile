@@ -44,7 +44,7 @@ node {
             rc = command "${toolbelt} ${scanner}:run --target ${FORCE_APP} --outputfile ${PATH} --format ${FORMAT}"
         }
         stage('Run Tests on Data'){
-            rc = command "${toolbelt} force:apex:test:run --targetusername ${HUB_ORG} --testlevel ${TEST_LEVEL}"
+            rc = command "${toolbelt} force:source:deploy -m ApexClass -l RunAllTestsInOrg -c"
         }
 
         stage('Deploy Code') {
