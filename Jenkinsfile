@@ -45,7 +45,7 @@ node {
             rc = command "${toolbelt} ${scanner}:run --target ${FORCE_APP} --outputfile ${PATH} --format ${FORMAT}"
         }
         stage('Convert to Data'){
-            rc =  bat returnStdout: true, script: "\"${toolbelt}\" force:source:convert --rootdir ${FORCE_APP} --outputdir=${CONVERT} -u ${HUB_ORG}"
+            rc =  bat returnStdout: true, script: "\"${toolbelt}\" force:source:convert --rootdir ${FORCE_APP} --outputdir=${CONVERT}"
         }
 
         stage('Deploy Code') {
