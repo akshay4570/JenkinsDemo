@@ -44,7 +44,7 @@ node {
             rc = command "${toolbelt} ${scanner}:run --target ${FORCE_APP} --outputfile ${PATH} --format ${FORMAT}"
         }
         stage('Run Tests on Data'){
-            rc =  bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy -m ApexClass -l RunAllTestsInOrg -u ${HUB_ORG}"
+            rc =  bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy -x manifest/package.xml -l RunAllTestsInOrg -u ${HUB_ORG}"
         }
 
         stage('Deploy Code') {
