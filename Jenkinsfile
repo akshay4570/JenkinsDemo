@@ -15,6 +15,7 @@ node {
     def FORCE_APP = 'force-app'
     def PATH = 'C:\\results.csv'
     def FORMAT = 'csv'
+    def CONVERT = 'convert'
 
     println 'KEY IS' 
     println JWT_KEY_CRED_ID
@@ -43,8 +44,8 @@ node {
         stage('Static Code Analysis'){
             rc = command "${toolbelt} ${scanner}:run --target ${FORCE_APP} --outputfile ${PATH} --format ${FORMAT}"
         }
-        stage('Run Tests on Data'){
-            rc =  bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --deploydir ${FORCE_APP} --testlevel ${TEST_LEVEL} -u ${HUB_ORG}"
+        stage('Convert to Data'){
+            rc =  bat returnStdout: true, script: "\"${toolbelt}\" force:source:convert --rootdir ${FORCE_APP} --outputdir=${CONVERT} -u ${HUB_ORG}"
         }
 
         stage('Deploy Code') {
@@ -54,9 +55,9 @@ node {
             
             // need to pull out assigned username
             if (isUnix()) {
-            rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u ${HUB_ORG}"
+            rmsg = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy --deploydir=${CONVERT} --testlevel=${TEST_LEVEL} --checkonly -u ${HUB_ORG}"
             }else{
-            rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u ${HUB_ORG}"
+            rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy --deploydir=${CONVERT} --testlevel=${TEST_LEVEL} --checkonly -u ${HUB_ORG}"
             }
             
             printf rmsg
