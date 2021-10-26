@@ -42,7 +42,7 @@ node {
         }
 
         stage('Static Code Analysis'){
-            rc = bat returnStdout: true, script:  "\"${scanner}\":run --target ${FORCE_APP} --outputfile ${PATH} --format ${FORMAT}"
+            rc = bat returnStdout: true, script:  "\"${scanner}\" scanner:run --target ${FORCE_APP} --outputfile ${PATH} --format ${FORMAT}"
         }
         stage('Convert to Data'){
             rc =  bat returnStdout: true, script: "\"${toolbelt}\" force:source:convert --rootdir ${FORCE_APP} --outputdir=${CONVERT}"
