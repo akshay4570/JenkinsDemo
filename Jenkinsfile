@@ -12,7 +12,7 @@ node {
     def JWT_KEY_CRED_ID = env.JWT_CRED_ID_DH
     def CONNECTED_APP_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY_DH
     def TEST_LEVEL = 'RunLocalTests'
-    def FORCE_APP = 'force-app'
+    def FORCE_APP = "force-app"
     def PATH = 'C:\\results.csv'
     def FORMAT = 'csv'
     def CONVERT = 'convert'
@@ -42,7 +42,7 @@ node {
         }
 
         stage('Static Code Analysis'){
-            rc = bat returnStdout: true, script:  "\"${toolbelt}\" scanner:run --target=\"force-app/main/default/classes/AccountController.cls\" --format=csv"
+            rc = bat returnStdout: true, script:  "\"${toolbelt}\" scanner:run --target=${FORCE_APP} --format=csv"
         }
         stage('Convert to Data'){
             rc =  bat returnStdout: true, script: "\"${toolbelt}\" force:source:convert --rootdir=force-app --outputdir=convert"
