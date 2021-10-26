@@ -42,10 +42,10 @@ node {
         }
 
         stage('Static Code Analysis'){
-            rc = bat returnStdout: true, script:  "\"${toolbelt}\" scanner:run --target ${FORCE_APP} --format ${FORMAT}"
+            rc = bat returnStdout: true, script:  "\"${toolbelt}\" scanner:run --target=force-app --format=csv"
         }
         stage('Convert to Data'){
-            rc =  bat returnStdout: true, script: "\"${toolbelt}\" force:source:convert --rootdir ${FORCE_APP} --outputdir=${CONVERT}"
+            rc =  bat returnStdout: true, script: "\"${toolbelt}\" force:source:convert --rootdir=force-app --outputdir=convert"
         }
 
         stage('Deploy Code') {
@@ -55,9 +55,9 @@ node {
             
             // need to pull out assigned username
             if (isUnix()) {
-            rmsg = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy --deploydir=${CONVERT} --testlevel=${TEST_LEVEL} --checkonly -u ${HUB_ORG}"
+            rmsg = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -u ${HUB_ORG}"
             }else{
-            rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy --deploydir=${CONVERT} --testlevel=${TEST_LEVEL} --checkonly -u ${HUB_ORG}"
+            rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -u ${HUB_ORG}"
             }
             
             printf rmsg
