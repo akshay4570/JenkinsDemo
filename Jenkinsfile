@@ -41,11 +41,12 @@ node {
             if (rc != 0) { error 'Salesforce Dev hub org authorization failed' }
         }
         stage('Fetch Delta Changes'){
-            rc = bat returnStdout: true, script:  """git config remote.origin.fetch \"+refs/heads/*:refs/remotes/origin/*\" \
-                                                     git fetch --all \
-                                                     git checkout -b pr \
-                                                     git --no-pager diff --name-status pr origin/QA \
-                                                     """ 
+            rc = bat returnStdout: true, script:  """
+                                                     git config remote.origin.fetch \"+refs/heads/*:refs/remotes/origin/*\" 
+                                                     git fetch --all 
+                                                     git checkout -b pr 
+                                                     git --no-pager diff --name-status pr origin/QA 
+                                                  """ 
         }
         stage('Static Code Analysis'){
             rc = bat returnStdout: true, script:  "\"${toolbelt}\" scanner:run --target force-app --format csv"
