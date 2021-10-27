@@ -46,7 +46,7 @@ node {
                                                      git fetch --all 
                                                      git checkout pr 
                                                      git --no-pager diff --name-status pr origin/QA 
-                                                     sgd --to pr --from origin/QA_Release1 --repo . --output .
+                                                     \"${toolbelt}\" sgd:source:delta --to pr --from origin/QA_Release1 --repo . --output .
                                                      cat package/package.xml
                                                   """ 
         }
