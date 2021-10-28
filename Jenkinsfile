@@ -24,7 +24,7 @@ node {
     println CONNECTED_APP_CONSUMER_KEY
     
     def sfdx = tool 'sfdx'
-    def scanner = bat returnStatus: true, script: "\"${sfdx}\" plugins:install @salesforce/sfdx-scanner"
+    def res = bat returnStatus: true, script: "\"${sfdx}\" plugins:install @salesforce/sfdx-scanner"
    
     stage('checkout source') {
 	// when running in multi-branch job temp
@@ -51,7 +51,7 @@ node {
                                                   """ 
         }*/
         stage('Static Code Analysis'){
-            rc = bat returnStdout: true, script:  "\"${scanner}\" --target force-app --format csv"
+            rc = bat returnStdout: true, script:  "\"${sfdx}\" scanner:run --target force-app --format csv"
         }
         stage('Convert to Data'){
             rc =  bat returnStdout: true, script: "\"${sfdx}\" force:source:convert --rootdir=force-app --outputdir=convert"
