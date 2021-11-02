@@ -24,7 +24,6 @@ node {
     println CONNECTED_APP_CONSUMER_KEY
     
     def sfdx = tool 'sfdx'
-    def res = bat returnStatus: true, script: "\"${sfdx}\" plugins:install @salesforce/sfdx-scanner"
    
     stage('checkout source') {
 	// when running in multi-branch job temp
