@@ -3,6 +3,8 @@
     <types>
         <members>AccountController</members>
         <members>AccountControllerTest</members>
+        <members>ContactController</members>
+        <members>ContactControllerTest</members>
         <name>ApexClass</name>
     </types>
     <types>
