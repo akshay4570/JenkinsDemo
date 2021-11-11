@@ -32,6 +32,7 @@ node {
 
     stage('Installations and Dependencies') {
         bat 'npm install -i sfdx'
+        bat 'sfdx plugins:install @salesforce/sfdx-scanner'
     }
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Authorize DevHub'){
@@ -52,9 +53,9 @@ node {
         //                                              cat package/package.xml
         //                                           """ 
         // }
-        /*stage('Static Code Analysis'){
-            rc = bat returnStdout: true, script:  "\"${sfdx}\" scanner:run --target force-app --format csv"
-        }*/
+        stage('Static Code Analysis'){
+            rc = bat returnStdout: true, script:  "sfdx scanner:run --target force-app --format csv"
+        }
         stage('Convert to Data'){
             rc =  bat returnStdout: true, script: "sfdx force:source:convert --rootdir=force-app --outputdir=convert"
         }
