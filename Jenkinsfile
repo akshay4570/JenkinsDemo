@@ -9,7 +9,7 @@ node {
 
     def HUB_ORG=env.HUB_ORG_DH
     def SFDC_HOST = env.SFDC_HOST_DH
-    def JWT_KEY_CRED_ID = env.JWT_CRED_ID_DH
+    def JWT_KEY_CRED_ID = '62f79840-fcf5-44c6-9a12-12ab5bd0e93a'
     def CONNECTED_APP_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY_DH
     def TEST_LEVEL = 'RunLocalTests'
     def FORCE_APP = "force-app"
