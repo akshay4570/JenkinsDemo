@@ -33,7 +33,7 @@ node {
     stage('Installations and Dependencies') {
         bat 'npm install -i sfdx'
         bat 'sfdx plugins:install @salesforce/sfdx-scanner'
-        bat 'sfdx plugins:install sfdx-git-delta'
+        bat 'npm i sfdx-git-delta'
     }
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Authorize DevHub'){
@@ -46,7 +46,12 @@ node {
         }
         stage('Fetch Delta Changes'){
             rc = bat returnStdout: true, script:  """
-                                                     sfdx sgd
+                                                     git config remote.origin.fetch \"+refs/heads/*:refs/remotes/origin/*\" 
+                                                     git fetch --all 
+                                                     git checkout -b pr 
+                                                     git --no-pager diff --name-status pr origin/QA 
+                                                     sfdx sgd:source:delta --to pr --from origin/QA_Release1 --repo . --output .
+                                                     cat package/package.xml
                                                   """ 
         }
         stage('Static Code Analysis'){
