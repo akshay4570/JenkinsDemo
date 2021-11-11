@@ -54,8 +54,8 @@ node {
         //                                           """ 
         // }
         stage('Static Code Analysis'){
-            bat 'sfdx scanner'
-            // rc = bat returnStdout: true, script:  "sfdx scanner:run --target force-app --format csv"
+            // bat 'sfdx scanner'
+            rc = bat returnStdout: true, script:  "sfdx scanner:run --target=force-app/main/default/classes/AccountController.cls --format=csv"
         }
         stage('Convert to Data'){
             rc =  bat returnStdout: true, script: "sfdx force:source:convert --rootdir=force-app --outputdir=convert"
