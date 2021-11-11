@@ -36,47 +36,47 @@ node {
         bat 'npm i sfdx-git-delta'
         bat 'sfdx plugins'
     }
-    // withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
-    //     stage('Authorize DevHub'){
-    //         if (isUnix()) {
-    //             rc = sh returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
-    //         }else{
-    //             rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
-    //         }
-    //         if (rc != 0) { error 'Salesforce Dev hub org authorization failed' }
-    //     }
-    //     stage('Fetch Delta Changes'){
-    //         rc = bat returnStdout: true, script:  """
-    //                                                  git config remote.origin.fetch \"+refs/heads/*:refs/remotes/origin/*\" 
-    //                                                  git fetch --all 
-    //                                                  git checkout pr 
-    //                                                  git --no-pager diff --name-status pr origin/QA 
-    //                                                  sfdx sgd:source:delta --to pr --from origin/QA_Release1 --repo . --output .
-    //                                                  cat package/package.xml
-    //                                               """ 
-    //     }
-    //     stage('Static Code Analysis'){
-    //         rc = bat returnStdout: true, script:  "sfdx scanner:run --target=force-app --outputfile=results.csv --format=csv > results.csv"
-    //     }
-    //     stage('Convert to Data'){
-    //         rc =  bat returnStdout: true, script: "sfdx force:source:convert --rootdir=force-app --outputdir=convert"
-    //     }
+    withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
+        stage('Authorize DevHub'){
+            if (isUnix()) {
+                rc = sh returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+            }else{
+                rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+            }
+            if (rc != 0) { error 'Salesforce Dev hub org authorization failed' }
+        }
+        stage('Fetch Delta Changes'){
+            rc = bat returnStdout: true, script:  """
+                                                     git config remote.origin.fetch \"+refs/heads/*:refs/remotes/origin/*\" 
+                                                     git fetch --all 
+                                                     git checkout pr 
+                                                     git --no-pager diff --name-status pr origin/QA 
+                                                     sfdx sgd:source:delta --to pr --from origin/QA_Release1 --repo . --output .
+                                                     cat package/package.xml
+                                                  """ 
+        }
+        stage('Static Code Analysis'){
+            rc = bat returnStdout: true, script:  "sfdx scanner:run --target=\"force-app\" --outputfile=results.csv --format=csv > results.csv"
+        }
+        stage('Convert to Data'){
+            rc =  bat returnStdout: true, script: "sfdx force:source:convert --rootdir=force-app --outputdir=convert"
+        }
 
-    //     stage('Deploy Code') {
+        stage('Deploy Code') {
         
 
-    //         println rc
+            println rc
             
-    //         // need to pull out assigned username
-    //         if (isUnix()) {
-    //         rmsg = sh returnStdout: true, script: "sfdx force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -u ${HUB_ORG}"
-    //         }else{
-    //         rmsg = bat returnStdout: true, script: "sfdx force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -u ${HUB_ORG}"
-    //         }
+            // need to pull out assigned username
+            if (isUnix()) {
+            rmsg = sh returnStdout: true, script: "sfdx force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -u ${HUB_ORG}"
+            }else{
+            rmsg = bat returnStdout: true, script: "sfdx force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -u ${HUB_ORG}"
+            }
             
-    //         printf rmsg
-    //         println('Hello from a Job DSL script!')
-    //         println(rmsg)
-    //     }
-    // }
+            printf rmsg
+            println('Hello from a Job DSL script!')
+            println(rmsg)
+        }
+    }
 }
