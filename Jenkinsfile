@@ -36,7 +36,7 @@ node {
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Authorize DevHub'){
             if (isUnix()) {
-                rc = sh returnStatus: true, script: "${sfdx} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+                rc = sh returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
             }else{
                 rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
             }
@@ -56,7 +56,7 @@ node {
             rc = bat returnStdout: true, script:  "\"${sfdx}\" scanner:run --target force-app --format csv"
         }*/
         stage('Convert to Data'){
-            rc =  bat returnStdout: true, script: "\"${sfdx}\" force:source:convert --rootdir=force-app --outputdir=convert"
+            rc =  bat returnStdout: true, script: "sfdx force:source:convert --rootdir=force-app --outputdir=convert"
         }
 
         stage('Deploy Code') {
@@ -66,9 +66,9 @@ node {
             
             // need to pull out assigned username
             if (isUnix()) {
-            rmsg = sh returnStdout: true, script: "${sfdx} force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -u ${HUB_ORG}"
+            rmsg = sh returnStdout: true, script: "sfdx force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -u ${HUB_ORG}"
             }else{
-            rmsg = bat returnStdout: true, script: "\"${sfdx}\" force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -u ${HUB_ORG}"
+            rmsg = bat returnStdout: true, script: "sfdx force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -u ${HUB_ORG}"
             }
             
             printf rmsg
