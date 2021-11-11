@@ -45,6 +45,7 @@ node {
         }
         stage('Fetch Delta Changes'){
             rc = bat returnStdout: true, script:  """
+                                                     git checkout T0001
                                                      git --no-pager diff --name-status T0001 origin/QA
                                                      sfdx sgd:source:delta --to T0001 --from origin/QA_Release1 --repo . --output .
                                                      cat package/package.xml
