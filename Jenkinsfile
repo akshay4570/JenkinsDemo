@@ -43,19 +43,19 @@ node {
             }
             if (rc != 0) { error 'Salesforce Dev hub org authorization failed' }
         }
-        // stage('Fetch Delta Changes'){
-        //     rc = bat returnStdout: true, script:  """
-        //                                              git config remote.origin.fetch \"+refs/heads/*:refs/remotes/origin/*\" 
-        //                                              git fetch --all 
-        //                                              git checkout pr 
-        //                                              git --no-pager diff --name-status pr origin/QA 
-        //                                              \"${sfdx}\" sgd:source:delta --to pr --from origin/QA_Release1 --repo . --output .
-        //                                              cat package/package.xml
-        //                                           """ 
-        // }
+        stage('Fetch Delta Changes'){
+            rc = bat returnStdout: true, script:  """
+                                                     git config remote.origin.fetch \"+refs/heads/*:refs/remotes/origin/*\" 
+                                                     git fetch --all 
+                                                     git checkout pr 
+                                                     git --no-pager diff --name-status pr origin/QA 
+                                                     sfdx sgd:source:delta --to pr --from origin/QA_Release1 --repo . --output .
+                                                     cat package/package.xml
+                                                  """ 
+        }
         stage('Static Code Analysis'){
             // bat 'sfdx scanner'
-            rc = bat returnStdout: true, script:  "sfdx scanner:run --target=force-app/main/default/classes/AccountController.cls --format=csv"
+            // rc = bat returnStdout: true, script:  "sfdx scanner:run --target=force-app/main/default/classes/AccountController.cls --format=csv"
         }
         stage('Convert to Data'){
             rc =  bat returnStdout: true, script: "sfdx force:source:convert --rootdir=force-app --outputdir=convert"
