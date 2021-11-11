@@ -55,7 +55,7 @@ node {
                                                   """ 
         }
         stage('Static Code Analysis'){
-            rc = bat returnStdout: true, script:  "sfdx scanner:run --target=force-app --format=csv"
+            rc = bat returnStdout: true, script:  "sfdx scanner:run --target=force-app --outputfile=results.csv --format=csv > results.csv"
         }
         stage('Convert to Data'){
             rc =  bat returnStdout: true, script: "sfdx force:source:convert --rootdir=force-app --outputdir=convert"
