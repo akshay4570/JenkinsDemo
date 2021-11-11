@@ -47,7 +47,7 @@ node {
             rc = bat returnStdout: true, script:  """
                                                      git config remote.origin.fetch \"+refs/heads/*:refs/remotes/origin/*\" 
                                                      git fetch --all 
-                                                     git checkout pr 
+                                                     git checkout -b pr 
                                                      git --no-pager diff --name-status pr origin/QA 
                                                      sfdx sgd:source:delta --to pr --from origin/QA_Release1 --repo . --output .
                                                      cat package/package.xml
