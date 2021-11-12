@@ -31,9 +31,9 @@ node {
     }
 
     stage('Installations and Dependencies') {
-        bat 'npm install i sfdx'
-        bat 'npm i @salesforce/sfdx-scanner'
-        bat 'npm i sfdx-git-delta'
+        bat 'npm install --global sfdx-cli'    
+        bat 'sfdx plugins:install @salesforce/sfdx-scanner'
+        bat 'echo "y" | sfdx plugins:install sfdx-git-delta'
         bat 'sfdx plugins'
     }
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
@@ -51,12 +51,12 @@ node {
                                                      git fetch --all 
                                                      git checkout pr 
                                                      git --no-pager diff --name-status pr origin/QA 
-                                                     sfdx sgd:source:delta --to pr --from origin/QA_Release1 --repo . --output .
+                                                     sfdx sgd:source:delta --to pr --from origin/QA --repo . --output .
                                                      cat package/package.xml
                                                   """ 
         }
         stage('Static Code Analysis'){
-            rc = bat returnStdout: true, script:  "sfdx scanner:run --target=\"force-app\" --outputfile=results.csv --format=csv > results.csv"
+            rc = bat returnStdout: true, script:  "sfdx scanner:run --target=force-app --outputfile=results.csv --format=csv > results.csv"
         }
         stage('Convert to Data'){
             rc =  bat returnStdout: true, script: "sfdx force:source:convert --rootdir=force-app --outputdir=convert"
