@@ -31,7 +31,7 @@ node {
     }
 
     stage('Installations and Dependencies') {
-        bat 'npm install --global sfdx-cli'    
+        bat 'npm install sfdx-cli'    
         bat 'sfdx plugins:install @salesforce/sfdx-scanner'
         bat 'echo \'y\' | sfdx plugins:install sfdx-git-delta'
         bat 'sfdx plugins'
