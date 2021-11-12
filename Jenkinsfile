@@ -31,9 +31,9 @@ node {
     }
 
     stage('Installations and Dependencies') {
-        bat 'npm install sfdx-cli'    
+        bat 'npm install -g sfdx-cli'    
         bat 'sfdx plugins:install @salesforce/sfdx-scanner'
-        bat 'echo \'y\' | sfdx plugins:install sfdx-git-delta'
+        echo 'y' | bat 'sfdx plugins:install sfdx-git-delta'
         bat 'sfdx plugins'
     }
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
