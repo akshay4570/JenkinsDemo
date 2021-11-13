@@ -32,7 +32,7 @@ node {
 
     stage('Installations and Dependencies') {
         bat 'npm install -g sfdx-cli'    
-        bat 'sfdx plugins:install @salesforce/sfdx-scanner'
+        bat 'npm i @salesforce/sfdx-scanner'
         bat 'sfdx plugins:install sfdx-git-delta'
         print 'y'
         bat 'sfdx plugins'
