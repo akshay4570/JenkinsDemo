@@ -56,14 +56,15 @@ node {
                                                      cat package/package.xml
                                                   """ 
         }
+        stage('Convert to Metadata'){
+            rc =  bat returnStdout: true, script: "sfdx force:source:convert --manifest=package/package.xml --outputdir=convert"
+        }
         stage('Static Code Analysis'){
-            rc = bat returnStdout: true, script:  "sfdx scanner:run --target=force-app --outputfile=results.csv --format=csv > results.csv"
+            rc = bat returnStdout: true, script:  "sfdx scanner:run --target=**/convert/** --outputfile=results.csv --format=csv > results.csv"
         }
-        stage('Convert to Data'){
-            rc =  bat returnStdout: true, script: "sfdx force:source:convert --rootdir=force-app --outputdir=convert"
-        }
+        
 
-        stage('Deploy Code') {
+        stage('Run Tests and Deploy Code') {
         
 
             println rc
