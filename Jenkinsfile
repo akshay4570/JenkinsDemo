@@ -60,7 +60,7 @@ node {
             rc =  bat returnStdout: true, script: "sfdx force:source:convert --manifest=package/package.xml --outputdir=convert"
         }
         stage('Static Code Analysis'){
-            rc = bat returnStdout: true, script:  "sfdx scanner:run --target=**/convert/** --outputfile=results.csv --format=csv > results.csv"
+            rc = bat returnStdout: true, script:  "sfdx scanner:run --target=**/convert/** --outputfile=results.csv --format=csv"
         }
         
 
