@@ -36,7 +36,7 @@ node {
         bat 'sfdx plugins:install sfdx-git-delta'
         print 'y'
         bat 'sfdx plugins'
-        bat 'sfdx scanner'
+        bat 'sfdx scanner:rule:list'
     }
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Authorize DevHub'){
