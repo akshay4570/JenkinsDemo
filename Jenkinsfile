@@ -34,9 +34,8 @@ node {
         //bat 'npm install -g sfdx-cli'    
         bat "\"${sfdx}\" plugins:install @salesforce/sfdx-scanner"
         bat "\"${sfdx}\" plugins:install sfdx-git-delta"
-        print 'y'
+        print "y"
         bat "\"${sfdx}\" plugins"
-        bat "\"${sfdx}\" scanner:rule:list"
     }
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Authorize DevHub'){
@@ -53,7 +52,7 @@ node {
                                                      git fetch --all 
                                                      git checkout pr 
                                                      git --no-pager diff --name-status pr origin/QA 
-                                                     \"${sfdx}\" sgd:source:delta --to pr --from origin/QA --repo . --output .
+                                                     \'${sfdx}\' sgd:source:delta --to pr --from origin/QA --repo . --output .
                                                      cat package/package.xml
                                                   """ 
         }
