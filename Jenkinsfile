@@ -34,8 +34,7 @@ node {
         //bat 'npm install -g sfdx-cli'   
         bat "\"${sfdx}\" update" 
         bat "\"${sfdx}\" plugins:install @salesforce/sfdx-scanner"
-        bat "\"${sfdx}\" plugins:install sfdx-git-delta"
-        print 'y'
+        def p = "bat '\"${sfdx}\" plugins:install sfdx-git-delta'".execute() | "print 'y' ".execute()   
         bat "\"${sfdx}\" plugins"
     }
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
