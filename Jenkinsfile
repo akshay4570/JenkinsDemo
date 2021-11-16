@@ -31,7 +31,8 @@ node {
     }
 
     stage('Installations and Dependencies') {
-        //bat 'npm install -g sfdx-cli'    
+        //bat 'npm install -g sfdx-cli'   
+        bat "\"${sfdx}\" update" 
         bat "\"${sfdx}\" plugins:install @salesforce/sfdx-scanner"
         bat "\"${sfdx}\" plugins:install sfdx-git-delta"
         print "y"
@@ -52,7 +53,7 @@ node {
                                                      git fetch --all 
                                                      git checkout pr 
                                                      git --no-pager diff --name-status pr origin/QA 
-                                                     \'${sfdx}\' sgd:source:delta --to pr --from origin/QA --repo . --output .
+                                                     \"${sfdx}\" sgd:source:delta --to pr --from origin/QA --repo . --output .
                                                      cat package/package.xml
                                                   """ 
         }
