@@ -23,7 +23,7 @@ node {
     println SFDC_HOST
     println CONNECTED_APP_CONSUMER_KEY
     
-    //def sfdx = tool 'sfdx'
+    def sfdx = tool 'sfdx'
    
     stage('checkout source') {
 	// when running in multi-branch job temp
@@ -31,19 +31,19 @@ node {
     }
 
     stage('Installations and Dependencies') {
-        bat 'npm install -g sfdx-cli'    
-        bat 'sfdx plugins:install @salesforce/sfdx-scanner'
-        bat 'sfdx plugins:install sfdx-git-delta'
+        //bat 'npm install -g sfdx-cli'    
+        bat "\"${sfdx}\" plugins:install @salesforce/sfdx-scanner"
+        bat "\"${sfdx}\" plugins:install sfdx-git-delta"
         print 'y'
-        bat 'sfdx plugins'
-        bat 'sfdx scanner:rule:list'
+        bat "\"${sfdx}\" plugins"
+        bat "\"${sfdx}\" scanner:rule:list"
     }
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Authorize DevHub'){
             if (isUnix()) {
                 rc = sh returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
             }else{
-                rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+                rc = bat returnStatus: true, script: "\"${sfdx}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
             }
             if (rc != 0) { error 'Salesforce Dev hub org authorization failed' }
         }
@@ -53,15 +53,15 @@ node {
                                                      git fetch --all 
                                                      git checkout pr 
                                                      git --no-pager diff --name-status pr origin/QA 
-                                                     sfdx sgd:source:delta --to pr --from origin/QA --repo . --output .
+                                                     \"${sfdx}\" sgd:source:delta --to pr --from origin/QA --repo . --output .
                                                      cat package/package.xml
                                                   """ 
         }
         stage('Convert to Metadata'){
-            rc =  bat returnStdout: true, script: "sfdx force:source:convert --manifest=package/package.xml --outputdir=convert"
+            rc =  bat returnStdout: true, script: "\"${sfdx}\" force:source:convert --manifest=package/package.xml --outputdir=convert"
         }
         stage('Static Code Analysis'){
-            rc = bat returnStdout: true, script:  "sfdx scanner:run --target=**/convert/** --outputfile=results.csv --format=csv"
+            rc = bat returnStdout: true, script:  "\"${sfdx}\" scanner:run --target=**/convert/** --outputfile=results.csv --format=csv"
         }
         
 
@@ -74,7 +74,7 @@ node {
             if (isUnix()) {
             rmsg = sh returnStdout: true, script: "sfdx force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -u ${HUB_ORG}"
             }else{
-            rmsg = bat returnStdout: true, script: "sfdx force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -u ${HUB_ORG}"
+            rmsg = bat returnStdout: true, script: "\"${sfdx}\" force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -u ${HUB_ORG}"
             }
             
             printf rmsg
